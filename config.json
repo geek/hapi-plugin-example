@@ -1,0 +1,14 @@
+{
+    "servers": [
+        {
+            "host": "0.0.0.0",
+            "port": 8080,
+            "options": {
+                "labels": ["http", "api"]
+            }
+        }
+    ],
+    "plugins": {
+        "products": {}
+    }
+}
