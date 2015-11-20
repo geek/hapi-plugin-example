@@ -1,10 +1,13 @@
 {
-    "name": "products",
-    "version": "0.0.2",
-    "engines": {
-        "node": ">=4.0.0"
-    },
-    "peerDependencies": {
-        "hapi": "11.x.x"
-    }
+  "name": "products",
+  "version": "0.0.2",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "peerDependencies": {
+    "hapi": "11.x.x"
+  },
+  "dependencies": {
+    "joi": "^7.0.0"
+  }
 }

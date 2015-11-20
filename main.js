@@ -1,5 +1,10 @@
-var Routes = require('./routes');
+var routes = require('./routes');
 
-exports.register = function (plugin, options, callback) {
-    plugin.route(Routes(plugin));
+exports.register = function (server, options, next) {
+    server.route(routes(options));
+    next();
+};
+
+exports.register.attributes = {
+    pkg: require('./package.json')
 };
