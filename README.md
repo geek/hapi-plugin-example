@@ -1,8 +1,10 @@
-[Hapi][] is a framework for rapidly building RESTful web services. Whether you
+Hapi Plugin Example
+===================
+
+[Hapi](http://hapijs.com/) is a framework for rapidly building RESTful web services. Whether you
 are building a very simple set of RESTful services or a large scale, cache
-heavy, and secure set of services, [hapi][] has you covered.  [Hapi][] will
-help get your server developed quickly with its wide range of configurable
-options.
+heavy, and secure set of services, ``hapi` has you covered.  [Hapi](http://hapijs.com/) will
+help get your server developed quickly with its wide range of configurable options.
 
 ## Building a Products API
 
@@ -11,27 +13,31 @@ of services for creating and listing out products. To get started create a
 directory named _products_ and add a _package.json_ file to the directory
 that looks like the following.
 
-    {
-        "name": "products",
-        "version": "0.0.1",
-        "engines": {
-            "node": ">=0.10.0"
-        },
-        "peerDependencies": {
-            "hapi": "1.x.x"
-        }
-    }
+```js
+{
+  "name": "products",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "peerDependencies": {
+    "hapi": "1.x.x"
+  }
+}
+```
 
 Create a _main.js_ file that will serve as the entry point for the plugin.  Add the following to the file:
 
-    var Routes = require('./routes');
+```js
+var Routes = require('./routes');
 
-    exports.register = function (plugin, options, callback) {
-        plugin.route(Routes);
-    };
+exports.register = function (plugin, options, callback) {
+    plugin.route(Routes);
+};
+```
 
-[Hapi][] provides a function for adding a single route or an array of routes.
-In this example we are adding an array of routes from a routes module.
+[Hapi](http://hapijs.com/) provides a function for adding a single route or an
+array of routes. In this example we are adding an array of routes from a routes module.
 
 Go ahead and create a _routes.js_ file, which will contain the route
 information and handlers. When defining the routes we will also be specifying
@@ -40,15 +46,17 @@ information and handlers. When defining the routes we will also be specifying
 For this example three routes will be created. Below is the code you should
 use to add the routes. Add the following code to your _routes.js_ file.
 
-    module.exports = function (plugin) {
-        var types = plugin.hapi.types;
-    
-        return [
-            { method: 'GET', path: '/products', config: { handler: getProducts, query: { name: types.string() } } },
-            { method: 'GET', path: '/products/{id}', config: { handler: getProduct } },
-            { method: 'POST', path: '/products', config: { handler: addProduct, payload: 'parse', schema: { name: types.string().required().min(3) }, response: { id: types.number().required() } } }
-        ];
-    };
+```js
+module.exports = function (plugin) {
+    var types = plugin.hapi.types;
+
+    return [
+        { method: 'GET', path: '/products', config: { handler: getProducts, query: { name: types.string() } } },
+        { method: 'GET', path: '/products/{id}', config: { handler: getProduct } },
+        { method: 'POST', path: '/products', config: { handler: addProduct, payload: 'parse', schema: { name: types.string().required().min(3) }, response: { id: types.number().required() } } }
+    ];
+};
+```
 
 The routes are exported as an array so that they can easily be included by the
 plugin register function. For the products listing endpoint we are
@@ -66,42 +74,44 @@ characters and the response body must contain an ID to be validated.
 
 Next add the handlers to the _routes.js_ file.
 
-    function getProducts(request) {
+```js
+function getProducts(request) {
 
-        if (request.query.name) {
-            request.reply(findProducts(request.query.name));
-        }
-        else {
-            request.reply(products);
-        }
+    if (request.query.name) {
+        request.reply(findProducts(request.query.name));
     }
-
-    function findProducts(name) {
-        return products.filter(function(product) {
-            return product.name.toLowerCase() === name.toLowerCase();
-        });
+    else {
+        request.reply(products);
     }
+}
 
-    function getProduct(request) {
-        var product = products.filter(function(p) {
-            return p.id == request.params.id;
-        }).pop();
+function findProducts(name) {
+    return products.filter(function(product) {
+        return product.name.toLowerCase() === name.toLowerCase();
+    });
+}
 
-        request.reply(product);
-    }
+function getProduct(request) {
+    var product = products.filter(function(p) {
+        return p.id == request.params.id;
+    }).pop();
 
-    function addProduct(request) {
-        var product = {
-            id: products[products.length - 1].id + 1,
-            name: request.payload.name
-        };
+    request.reply(product);
+}
 
-        products.push(product);
+function addProduct(request) {
+    var product = {
+        id: products[products.length - 1].id + 1,
+        name: request.payload.name
+    };
 
-        request.reply.created('/products/' + product.id)({
-            id: product.id
-        });
-    }
+    products.push(product);
+
+    request.reply.created('/products/' + product.id)({
+        id: product.id
+    });
+}
+```
 
 As you can see in the handlers, [hapi][] provides a simple way to add a
 response body by using the _request.reply_ function. Also, in the instance
@@ -110,15 +120,17 @@ to send a 201 response.
 
 Lastly, add a simple array to contain the products that the service will serve.
 
-    var products = [{
-            id: 1,
-            name: 'Guitar'
-        },
-        {
-            id: 2,
-            name: 'Banjo'
-        }
-    ];
+```js
+var products = [{
+       id: 1,
+       name: 'Guitar'
+   },
+   {
+       id: 2,
+       name: 'Banjo'
+   }
+];
+```
     
 
 ## Composing the server
@@ -127,20 +139,22 @@ The plugin can now be added to a server using a `config.json` file.  Create a `c
 file outside of the plugin directory in a new directory you plan to run the server.  Add
 the following contents to `config.json`
 
-    {
-        "servers": [
-            {
-                "host": "0.0.0.0",
-                "port": 8080,
-                "options": {
-                    "labels": ["http", "api"]
-                }
+```js
+{
+    "servers": [
+        {
+            "host": "0.0.0.0",
+            "port": 8080,
+            "options": {
+                "labels": ["http", "api"]
             }
-        ],
-        "plugins": {
-            "products": {}
         }
+    ],
+    "plugins": {
+        "products": {}
     }
+}
+```
 
 Next run `npm link` within the products folder and then run `npm link products` inside the folder where
 the `config.json` exists.  After this you will want to also run `npm install -g hapi` to install hapi.
