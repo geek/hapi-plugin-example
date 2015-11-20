@@ -1,8 +1,10 @@
-[Hapi][] is a framework for rapidly building RESTful web services. Whether you
+Hapi Plugin Example
+===================
+
+[Hapi](http://hapijs.com/) is a framework for rapidly building RESTful web services. Whether you
 are building a very simple set of RESTful services or a large scale, cache
-heavy, and secure set of services, [hapi][] has you covered.  [Hapi][] will
-help get your server developed quickly with its wide range of configurable
-options.
+heavy, and secure set of services, ``hapi` has you covered.  [Hapi](http://hapijs.com/) will
+help get your server developed quickly with its wide range of configurable options.
 
 ## Building a Products API
 
@@ -34,8 +36,8 @@ exports.register = function (plugin, options, callback) {
 };
 ```
 
-[Hapi][] provides a function for adding a single route or an array of routes.
-In this example we are adding an array of routes from a routes module.
+[Hapi](http://hapijs.com/) provides a function for adding a single route or an
+array of routes. In this example we are adding an array of routes from a routes module.
 
 Go ahead and create a _routes.js_ file, which will contain the route
 information and handlers. When defining the routes we will also be specifying
