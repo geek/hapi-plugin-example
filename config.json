@@ -1,11 +1,9 @@
 {
-    "servers": [
+    "connections": [
         {
             "host": "0.0.0.0",
             "port": 8080,
-            "options": {
-                "labels": ["http", "api"]
-            }
+            "labels": ["http", "api"]
         }
     ],
     "plugins": {

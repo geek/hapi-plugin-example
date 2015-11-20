@@ -26,7 +26,7 @@ that looks like the following.
 }
 ```
 
-Create a `main.js` file that will serve as the entry point for the plugin.  Add the following to the file:
+Create a `products.js` file that will serve as the entry point for the plugin.  Add the following to the file:
 
 ```js
 var routes = require('./routes');
@@ -148,19 +148,16 @@ file outside of the plugin directory in a new directory you plan to run the serv
 the following contents to `config.json`
 
 ```json
-{
-    "servers": [
-        {
-            "host": "0.0.0.0",
-            "port": 8080,
-            "options": {
-                "labels": ["http", "api"]
-            }
-        }
-    ],
-    "plugins": {
-        "products": {}
-    }
+{    "connections": [
+         {
+             "host": "0.0.0.0",
+             "port": 8080,
+             "labels": ["http", "api"]
+         }
+     ],
+     "plugins": {
+         "products": {}
+     }
 }
 ```
 
@@ -169,9 +166,9 @@ the `config.json` exists.  After this you will want to also run `npm install -g 
 
 ## Running the server
 
-Start the hapi server using the following command:
+Start the hapi server using the following command [rejoice](https://github.com/hapijs/rejoice), the hapi-cli:
 
-    hapi -c config.json
+    rejoice -c config.json
 
 To see a list of the products navigate to
 <http://locahost:8080/products>. Below is a screenshot of what the response
