@@ -3,57 +3,67 @@ Hapi Plugin Example
 
 [Hapi](http://hapijs.com/) is a framework for rapidly building RESTful web services. Whether you
 are building a very simple set of RESTful services or a large scale, cache
-heavy, and secure set of services, ``hapi` has you covered.  [Hapi](http://hapijs.com/) will
+heavy, and secure set of services, `hapi` has you covered.  [Hapi](http://hapijs.com/) will
 help get your server developed quickly with its wide range of configurable options.
 
 ## Building a Products API
 
 The following example will walk you through using hapi to build a RESTful set
 of services for creating and listing out products. To get started create a
-directory named _products_ and add a _package.json_ file to the directory
+directory named _products_ and add a `package.json` file to the directory
 that looks like the following.
 
-```js
+```json
 {
   "name": "products",
   "version": "0.0.1",
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.0.0"
   },
   "peerDependencies": {
-    "hapi": "1.x.x"
+    "hapi": "11.x.x"
   }
 }
 ```
 
-Create a _main.js_ file that will serve as the entry point for the plugin.  Add the following to the file:
+Create a `main.js` file that will serve as the entry point for the plugin.  Add the following to the file:
 
 ```js
-var Routes = require('./routes');
+var routes = require('./routes');
 
-exports.register = function (plugin, options, callback) {
-    plugin.route(Routes);
+exports.register = function (server, options, next) {
+    server.route(routes(options));
+    next();
 };
+
+exports.register.attributes = {
+    pkg: require('./package.json')
+};
+
 ```
 
 [Hapi](http://hapijs.com/) provides a function for adding a single route or an
 array of routes. In this example we are adding an array of routes from a routes module.
 
-Go ahead and create a _routes.js_ file, which will contain the route
+Go ahead and create a `routes.js` file, which will contain the route
 information and handlers. When defining the routes we will also be specifying
-[validation requirements][]. 
+*validation requirements*.
 
 For this example three routes will be created. Below is the code you should
-use to add the routes. Add the following code to your _routes.js_ file.
+use to add the routes. Add the following code to your `routes.js` file.
 
 ```js
-module.exports = function (plugin) {
-    var types = plugin.hapi.types;
-
+module.exports = function routes (options) {
+    var Joi = require('joi');
     return [
-        { method: 'GET', path: '/products', config: { handler: getProducts, query: { name: types.string() } } },
+        { method: 'GET', path: '/products', config: { handler: getProducts, query: { name: Joi.string() } } },
         { method: 'GET', path: '/products/{id}', config: { handler: getProduct } },
-        { method: 'POST', path: '/products', config: { handler: addProduct, payload: 'parse', schema: { name: types.string().required().min(3) }, response: { id: types.number().required() } } }
+        { method: 'POST', path: '/products', config: {
+            handler: addProduct,
+            payload: 'parse',
+            schema:  Joi.string().required().min(3) ,
+            response: { id: Joi.number().required() }
+        } }
     ];
 };
 ```
@@ -72,16 +82,14 @@ extra validation requirements are added, even those on the response body. The
 request body must contain a parameter for name that has a minimum of 3
 characters and the response body must contain an ID to be validated.
 
-Next add the handlers to the _routes.js_ file.
+Next add the handlers to the `routes.js` file.
 
 ```js
-function getProducts(request) {
-
+function getProducts(request, reply) {
     if (request.query.name) {
-        request.reply(findProducts(request.query.name));
-    }
-    else {
-        request.reply(products);
+        reply(findProducts(request.query.name));
+    } else {
+        reply(products);
     }
 }
 
@@ -91,15 +99,15 @@ function findProducts(name) {
     });
 }
 
-function getProduct(request) {
+function getProduct(request, reply) {
     var product = products.filter(function(p) {
         return p.id == request.params.id;
     }).pop();
 
-    request.reply(product);
+    reply(product);
 }
 
-function addProduct(request) {
+function addProduct(request, reply) {
     var product = {
         id: products[products.length - 1].id + 1,
         name: request.payload.name
@@ -107,15 +115,15 @@ function addProduct(request) {
 
     products.push(product);
 
-    request.reply.created('/products/' + product.id)({
+    reply.created('/products/' + product.id)({
         id: product.id
     });
 }
 ```
 
-As you can see in the handlers, [hapi][] provides a simple way to add a
-response body by using the _request.reply_ function. Also, in the instance
-when you have created an item you can use the _request.reply.created_ function
+As you can see in the handlers, *hapi* provides a simple way to add a
+response body by using the `reply function`. Also, in the instance
+when you have created an item you can use the `reply.created` function
 to send a 201 response.
 
 Lastly, add a simple array to contain the products that the service will serve.
@@ -139,7 +147,7 @@ The plugin can now be added to a server using a `config.json` file.  Create a `c
 file outside of the plugin directory in a new directory you plan to run the server.  Add
 the following contents to `config.json`
 
-```js
+```json
 {
     "servers": [
         {
@@ -201,7 +209,8 @@ you can have per-route authentication settings.
 
 ## Conclusion
 
-By now you should have a decent understanding of what hapi has to offer.
+By now you should have a decent understanding of what *hapi* has to offer.
+
 There are still many other features and options available to you when using
 hapi that is covered in the documentation.  Please take a look at the
 [github repository][] and feel free to provide any feedback you may have.
