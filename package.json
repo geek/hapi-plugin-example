@@ -4,6 +4,7 @@
   "engines": {
     "node": ">=4.0.0"
   },
+  "main": "main.js",
   "peerDependencies": {
     "hapi": "11.x.x"
   },
