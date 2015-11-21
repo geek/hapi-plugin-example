@@ -3,13 +3,14 @@
 module.exports = function routes (options) {
     const Joi = require('joi');
     return [
-        { method: 'GET', path: '/products', config: { handler: getProducts, query: { name: Joi.string() } } },
+        { method: 'GET', path: '/products',
+            config: {
+                handler: getProducts,
+                validate: { query: { name: Joi.string() } } } },
         { method: 'GET', path: '/products/{id}', config: { handler: getProduct } },
         { method: 'POST', path: '/products', config: {
             handler: addProduct,
-            payload: 'parse',
-            schema:  Joi.string().required().min(3) ,
-            response: { id: Joi.number().required() }
+            validate: {payload:  Joi.string().required().min(3)}
         } }
     ];
 };

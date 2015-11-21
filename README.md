@@ -26,7 +26,7 @@ that looks like the following.
 }
 ```
 
-Create a `products.js` file that will serve as the entry point for the plugin.  Add the following to the file:
+Create a `main.js` file that will serve as the entry point for the plugin.  Add the following to the file:
 
 ```js
 var routes = require('./routes');
