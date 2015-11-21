@@ -209,7 +209,10 @@ you can have per-route authentication settings.
 By now you should have a decent understanding of what *hapi* has to offer.
 
 There are still many other features and options available to you when using
-hapi that is covered in the documentation.  Please take a look at the
-[github repository][] and feel free to provide any feedback you may have.
+hapi that is covered in the [documentation](http://hapijs.com/api).
+A [tutorial is also available](hapijs.com/tutorials/plugins)
+
+
+Please take a look at the [github repository][] and feel free to provide any feedback you may have.
 
 [github repository]: https://github.com/wpreul/hapi-plugin-example
